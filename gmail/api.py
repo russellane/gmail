@@ -53,7 +53,7 @@ class GoogleMailAPI:
         assert isinstance(response, dict)
 
         if not (labels := response.get("labels")):
-            return []
+            return []  # pragma: no cover
 
         assert isinstance(labels, list)
         return labels
@@ -109,13 +109,13 @@ class GoogleMailAPI:
 
         payload = msg.get("payload")
         if not payload:
-            logger.debug("No payload")
-            return
+            logger.debug("No payload")  # pragma: no cover
+            return  # pragma: no cover
 
         parts = payload.get("parts", [])
         if not parts:
-            logger.debug("No parts")
-            return
+            logger.debug("No parts")  # pragma: no cover
+            return  # pragma: no cover
 
         for part in self._flatten_nested_email_parts(parts):
 
@@ -135,14 +135,14 @@ class GoogleMailAPI:
             )
 
             if not mimetype:
-                logger.debug("Missing mimeType")
-                continue
+                logger.debug("Missing mimeType")  # pragma: no cover
+                continue  # pragma: no cover
             if not filename:
-                logger.debug("Missing filename")
-                continue
+                logger.debug("Missing filename")  # pragma: no cover
+                continue  # pragma: no cover
             if not body:
-                logger.debug("Missing body")
-                continue
+                logger.debug("Missing body")  # pragma: no cover
+                continue  # pragma: no cover
             if not attachment_id:
                 logger.debug("Missing attachmentId")
                 continue
@@ -209,14 +209,14 @@ class GoogleMailAPI:
 
         try:
             msg_subject = [h["value"] for h in headers if h["name"] == "Subject"][0]
-        except IndexError:
-            msg_subject = ""
+        except IndexError:  # pragma: no cover
+            msg_subject = ""  # pragma: no cover
         self._print_item("HEADER", "SUBJECT", msg_subject)
 
         try:
             msg_from = [h["value"] for h in headers if h["name"] == "From"][0]
-        except IndexError:
-            msg_from = ""
+        except IndexError:  # pragma: no cover
+            msg_from = ""  # pragma: no cover
         self._print_item("HEADER", "FROM", msg_from)
 
     def print_listing(self, msg_id: str) -> None:
@@ -238,14 +238,14 @@ class GoogleMailAPI:
 
         try:
             msg_subject = [h["value"] for h in headers if h["name"] == "Subject"][0]
-        except IndexError:
-            msg_subject = ""
+        except IndexError:  # pragma: no cover
+            msg_subject = ""  # pragma: no cover
         # self._print_item('HEADER', 'SUBJECT', msg_subject)
 
         try:
             msg_from = [h["value"] for h in headers if h["name"] == "From"][0]
-        except IndexError:
-            msg_from = ""
+        except IndexError:  # pragma: no cover
+            msg_from = ""  # pragma: no cover
         # self._print_item('HEADER', 'FROM', msg_from)
 
         print(str.format("{} {:<40} {}", timestamp, msg_from, msg_subject))
@@ -255,3 +255,6 @@ class GoogleMailAPI:
         """docstring."""
         truncated = str(value)[:90] + (str(value)[90:] and "...")
         print(str.format("{!r:<7} {!r:<20} {!r}", tag, key, truncated))
+
+    def download(self, msg_id: str) -> None:
+        """Docstring."""

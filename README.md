@@ -31,9 +31,12 @@ See `gmail COMMAND --help` for help on a specific command.
 
 ## gmail download
 ```
-usage: gmail download [-h]
+usage: gmail download [-h] MSG_ID
 
-The `gmail download` program downloads mail messages.
+The `gmail download` program downloads a mail message.
+
+positional arguments:
+  MSG_ID      The id of the message to download.
 
 options:
   -h, --help  Show this help message and exit.

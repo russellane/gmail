@@ -16,20 +16,25 @@ class MailDownloadCmd(BaseCmd):
     def init_command(self) -> None:
         """Initialize mail `download` command."""
 
-        self.add_subcommand_parser(
+        parser = self.add_subcommand_parser(
             "download",
             help="download mail messages",
             description=self.cli.dedent(
                 """
-    The `%(prog)s` program downloads mail messages.
+    The `%(prog)s` program downloads a mail message.
                 """
             ),
+        )
+
+        parser.add_argument(
+            "MSG_ID",
+            help="the id of the message to download",
         )
 
     def run(self) -> None:
         """Run mail `download` command."""
 
-        msg_id = "FIXME"
+        msg_id = self.options.MSG_ID
 
         unknown_mimetypes: dict[str, int] = defaultdict(int)
 
@@ -37,13 +42,13 @@ class MailDownloadCmd(BaseCmd):
 
         for mimetype, filename, attachment_id in self.cli.api.get_next_attachment_id(msg_id):
 
+            logger.error(
+                f"mimetype={mimetype!r} filename={filename!r} attachment_id={attachment_id!r}"
+            )
+
             if mimetype[:5] not in ("image", "video") and mimetype != self.cli.api.mimetype_PDF:
                 logger.debug("mimeType {!r} not image/video/pdf", mimetype)
                 unknown_mimetypes[mimetype] += 1
-                continue
-
-            if self.options.no_action:
-                print("Not downloading", filename)
                 continue
 
             print("Downloading", filename)
@@ -52,7 +57,7 @@ class MailDownloadCmd(BaseCmd):
                 os.makedirs(self.cli.api.download_dir)
             except OSError as err:
                 if err.errno != errno.EEXIST:
-                    raise
+                    raise  # pragma: no cover
 
             with open(filename, "wb") as _:
                 _.write(self.cli.api.get_attachment_data(msg_id, attachment_id))

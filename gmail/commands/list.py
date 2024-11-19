@@ -125,6 +125,4 @@ class MailListCmd(BaseCmd):
                 self.cli.api.print_message(msg_id)
 
             if self.options.download:
-                logger.warning("Setting --no-action")
-                self.options.no_action = True
                 self.cli.api.download(msg_id)
