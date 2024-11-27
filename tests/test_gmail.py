@@ -1,5 +1,6 @@
 import os
 import sys
+from argparse import Namespace
 
 import pytest
 
@@ -15,7 +16,8 @@ slow = pytest.mark.skipif(not os.environ.get("SLOW"), reason="slow")
 
 @pytest.fixture(name="mail")
 def mail_() -> GoogleMailAPI:
-    return GoogleMailAPI()
+    options = Namespace()
+    return GoogleMailAPI(options)
 
 
 def run_cli(options: list[str]) -> None:
@@ -38,8 +40,12 @@ def test_gmail_labels() -> None:
     run_cli(["labels"])
 
 
+def test_gmail_labels_pretty_print() -> None:
+    run_cli(["labels", "--pretty"])
+
+
 def test_gmail_labels_limit_3() -> None:
-    run_cli(["--limit", "3", "labels"])
+    run_cli(["labels", "--limit", "3"])
 
 
 @slow
@@ -48,11 +54,15 @@ def test_gmail_labels_show_counts() -> None:
 
 
 def test_gmail_list_limit_20() -> None:
-    run_cli(["--limit", "20", "list"])
+    run_cli(["list", "--limit", "20"])
 
 
-def test_list_print_message_limit_3() -> None:
-    run_cli(["--limit", "3", "list", "--print-message"])
+def test_list_pretty_print_limit_1() -> None:
+    run_cli(["list", "--pretty-print", "--limit", "1"])
+
+
+def test_list_print_message_limit_1() -> None:
+    run_cli(["list", "--print-message", "--limit", "1"])
 
 
 def test_list_print_message_msg_id(mail: GoogleMailAPI) -> None:
@@ -63,32 +73,20 @@ def test_list_print_message_msg_id(mail: GoogleMailAPI) -> None:
             break
 
 
-def test_list_download_msg_id(mail: GoogleMailAPI) -> None:
-
-    for i, msg_id in enumerate(mail.get_next_msg_id()):
-        run_cli(["list", "--download", "--msg-id", msg_id])
-        if i >= 2:
-            break
-
-
 def test_list_print_listing_limit_3() -> None:
-    run_cli(["--limit", "3", "list", "--print-listing"])
+    run_cli(["list", "--print-listing", "--limit", "3"])
 
 
-def test_list_has_attachments() -> None:
-    run_cli(["--limit", "3", "list", "--has-attachments", "--print-message", "--print-listing"])
+def test_list_has_attachments_limit_3() -> None:
+    run_cli(["list", "--has-attachments", "--print-listing", "--limit", "3"])
 
 
-def test_list_has_images() -> None:
-    run_cli(["--limit", "3", "list", "--has-images", "--print-message", "--print-listing"])
+def test_list_has_images_limit_3() -> None:
+    run_cli(["list", "--has-images", "--print-listing", "--limit", "3"])
 
 
-def test_list_has_videos() -> None:
-    run_cli(["--limit", "3", "list", "--has-videos", "--print-message", "--print-listing"])
-
-
-def test_list_images_download_limit_3() -> None:
-    run_cli(["--limit", "3", "list", "--has-images", "--download"])
+def test_list_has_videos_limit_3() -> None:
+    run_cli(["list", "--has-videos", "--print-listing", "--limit", "3"])
 
 
 @slow

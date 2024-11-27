@@ -1,13 +1,10 @@
 # gmail
 ```
-usage: gmail [--limit LIMIT] [-h] [-H] [-v] [-V] [--config FILE]
-             [--print-config] [--print-url] [--completion [SHELL]]
+usage: gmail [-h] [-H] [-v] [-V] [--config FILE] [--print-config]
+             [--print-url] [--completion [SHELL]]
              COMMAND ...
 
 Google `mail` command line interface.
-
-options:
-  --limit LIMIT         Limit execution to `LIMIT` number of items.
 
 Specify one of:
   COMMAND
@@ -44,34 +41,43 @@ options:
 
 ## gmail labels
 ```
-usage: gmail labels [-h] [--show-counts]
+usage: gmail labels [-h] [--show-counts] [--limit LIMIT] [--pretty-print]
 
 The `gmail labels` program lists labels.
 
 options:
-  -h, --help     Show this help message and exit.
-  --show-counts  Show message counts.
+  -h, --help      Show this help message and exit.
+  --show-counts   Show message counts.
+  --limit LIMIT   Limit execution to `LIMIT` number of items.
+  --pretty-print  Pretty-print items.
 ```
 
 ## gmail list
 ```
-usage: gmail list [-h] [--print-message] [--print-listing] [--download]
+usage: gmail list [-h] [--print-message | --print-listing | --pretty-print]
                   [--msg-id MSG_ID] [--label-ids [LABEL_IDS ...]]
                   [--has-attachments] [--has-images] [--has-videos]
-                  [--search-query SEARCH_QUERY]
+                  [--search-query SEARCH_QUERY] [--limit LIMIT]
 
 The `gmail list` program lists mail messages.
 
 options:
   -h, --help            Show this help message and exit.
+  --limit LIMIT         Limit execution to `LIMIT` number of items.
+
+Printing options:
+  These options are mutually exclusive.
+
   --print-message, --print-msg
                         Print message.
   --print-listing       Print listing.
-  --download            Download attachments.
+  --pretty-print        Pretty-print items.
+
+Filtering options:
   --msg-id, --msgid MSG_ID
                         Operate on `MSG_ID` only.
   --label-ids [LABEL_IDS ...]
-                        Match labels.
+                        Match labels (default: `['INBOX']`).
   --has-attachments     Search messages with any files attached.
   --has-images          Search messages with image files attached.
   --has-videos          Search messages with video files attached.

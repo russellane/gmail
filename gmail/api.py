@@ -2,16 +2,13 @@
 
 import base64
 import os
-from time import localtime, strftime
+from argparse import Namespace
 from typing import Any, Iterator
 
 import xdg
 from loguru import logger
 
 from gmail.google import connect_to_google
-
-# from typing import Any, Iterator
-
 
 __all__ = ["GoogleMailAPI"]
 
@@ -24,9 +21,10 @@ class GoogleMailAPI:
 
     mimetype_PDF = "application/pdf"
 
-    def __init__(self) -> None:
+    def __init__(self, options: Namespace) -> None:
         """Connect to Google Mail."""
 
+        self.options = options
         self.service = connect_to_google("gmail.readonly", "v1")
 
         self.download_dir = xdg.xdg_data_home() / "pygoogle-gmail"
@@ -34,7 +32,7 @@ class GoogleMailAPI:
 
     @staticmethod
     def default_label_ids() -> list[str]:
-        """docstring."""
+        """Return list of default label ids."""
         return ["INBOX"]
 
     def get_labels(self) -> list[dict[str, str]]:
@@ -177,84 +175,3 @@ class GoogleMailAPI:
             else:
                 all_parts.append(part)
         return all_parts
-
-    def print_message(self, msg_id: str) -> None:
-        """docstring."""
-
-        msg = self.get_message(msg_id)
-
-        logger.debug("msg {!r}", msg)
-
-        for key, value in msg.items():
-            self._print_item("MSG", key, value)
-
-        self._print_item(
-            "MSG",
-            "LOCALTIME",
-            strftime("%Y-%m-%d %H:%M:%S %Z", localtime(int(msg["internalDate"]) / 1000)),
-        )
-
-        #
-        payload = msg["payload"]
-
-        for key, value in payload.items():
-            self._print_item("PAYLOAD", key, value)
-
-        #
-        headers = payload["headers"]
-        for hdr_dict in headers:
-            key = hdr_dict["name"]
-            value = hdr_dict["value"]
-            self._print_item("HEADER", key, value)
-
-        try:
-            msg_subject = [h["value"] for h in headers if h["name"] == "Subject"][0]
-        except IndexError:  # pragma: no cover
-            msg_subject = ""  # pragma: no cover
-        self._print_item("HEADER", "SUBJECT", msg_subject)
-
-        try:
-            msg_from = [h["value"] for h in headers if h["name"] == "From"][0]
-        except IndexError:  # pragma: no cover
-            msg_from = ""  # pragma: no cover
-        self._print_item("HEADER", "FROM", msg_from)
-
-    def print_listing(self, msg_id: str) -> None:
-        """docstring."""
-
-        msg = self.get_message(msg_id)
-
-        # logger.info('msg {!r}', msg.keys())
-
-        # self._print_item('MSG', 'id', msg['id'])
-        # self._print_item('MSG', 'snippet', msg['snippet'])
-        # self._print_item('MSG', 'sizeEstimate', msg['sizeEstimate'])
-        # self._print_item('MSG', 'labelIds', msg['labelIds'])
-
-        timestamp = strftime("%Y-%m-%d %H:%M:%S %Z", localtime(int(msg["internalDate"]) / 1000))
-
-        payload = msg["payload"]
-        headers = payload["headers"]
-
-        try:
-            msg_subject = [h["value"] for h in headers if h["name"] == "Subject"][0]
-        except IndexError:  # pragma: no cover
-            msg_subject = ""  # pragma: no cover
-        # self._print_item('HEADER', 'SUBJECT', msg_subject)
-
-        try:
-            msg_from = [h["value"] for h in headers if h["name"] == "From"][0]
-        except IndexError:  # pragma: no cover
-            msg_from = ""  # pragma: no cover
-        # self._print_item('HEADER', 'FROM', msg_from)
-
-        print(str.format("{} {:<40} {}", timestamp, msg_from, msg_subject))
-
-    @staticmethod
-    def _print_item(tag: str, key: str, value: str) -> None:
-        """docstring."""
-        truncated = str(value)[:90] + (str(value)[90:] and "...")
-        print(str.format("{!r:<7} {!r:<20} {!r}", tag, key, truncated))
-
-    def download(self, msg_id: str) -> None:
-        """Docstring."""

@@ -4,13 +4,12 @@ import errno
 import os
 from collections import defaultdict
 
-from libcli import BaseCmd
 from loguru import logger
 
-from gmail.cli import GoogleMailCLI
+from gmail.commands import GoogleMailCmd
 
 
-class MailDownloadCmd(BaseCmd):
+class MailDownloadCmd(GoogleMailCmd):
     """Mail `download` command class."""
 
     def init_command(self) -> None:
@@ -37,8 +36,6 @@ class MailDownloadCmd(BaseCmd):
         msg_id = self.options.MSG_ID
 
         unknown_mimetypes: dict[str, int] = defaultdict(int)
-
-        assert isinstance(self.cli, GoogleMailCLI)
 
         for mimetype, filename, attachment_id in self.cli.api.get_next_attachment_id(msg_id):
 

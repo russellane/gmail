@@ -1,12 +1,11 @@
 """Mail `labels` command module."""
 
-from libcli import BaseCmd
 from loguru import logger
 
-from gmail.cli import GoogleMailCLI
+from gmail.commands import GoogleMailCmd
 
 
-class MailLabelsCmd(BaseCmd):
+class MailLabelsCmd(GoogleMailCmd):
     """Mail `labels` command class."""
 
     def init_command(self) -> None:
@@ -28,10 +27,11 @@ class MailLabelsCmd(BaseCmd):
             help="show message counts",
         )
 
+        self.add_limit_option(parser)
+        self.add_pretty_print_option(parser)
+
     def run(self) -> None:
         """Run mail `labels` command."""
-
-        assert isinstance(self.cli, GoogleMailCLI)
 
         labels = self.cli.api.get_labels()
         nlabels = len(labels)
@@ -40,8 +40,12 @@ class MailLabelsCmd(BaseCmd):
 
         for idx, label in enumerate(labels):
 
-            if self.cli.check_limit():
+            if self.check_limit():
                 break
+
+            if self.cli.options.pretty_print:
+                self.pprint(label)
+                continue
 
             logger.debug("idx {} label {!r}", idx, label)
 
