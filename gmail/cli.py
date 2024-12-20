@@ -14,7 +14,7 @@ class GoogleMailCLI(BaseCLI):
 
     config = {
         # name of config file.
-        "config-file": Path("~/.pygoogle.toml"),
+        "config-file": Path("~/.libgoogle.toml"),
         # toml [section-name].
         "config-name": "gmail",
         # distribution name, not importable package name
