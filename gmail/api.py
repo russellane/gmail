@@ -5,8 +5,8 @@ import os
 from argparse import Namespace
 from typing import Any, Iterator
 
+import libgoogle
 import xdg
-from libgoogle import connect_to_google
 from loguru import logger
 
 __all__ = ["GoogleMailAPI"]
@@ -24,7 +24,7 @@ class GoogleMailAPI:
         """Connect to Google Mail."""
 
         self.options = options
-        self.service = connect_to_google("gmail.readonly", "v1")
+        self.service = libgoogle.connect("gmail.readonly", "v1")
 
         self.download_dir = xdg.xdg_data_home() / "gmail"
         self.user_id = "me"
