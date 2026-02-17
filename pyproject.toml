@@ -1,6 +1,6 @@
 [project]
 name = "rlane-gmail"
-version = "1.0.6"
+version = "1.0.7"
 description = "Google Mail CLI"
 authors = [
     {name = "Russel Lane", email = "russel@rlane.com"},
@@ -18,8 +18,8 @@ requires-python = ">=3.10"
 dependencies = [
     "loguru>=0.7.3",
     "rich>=13.9.4",
-    "rlane-libcli>=1.0.9",
-    "rlane-libgoogle>=1.0.3",
+    "rlane-libcli>=1.0.10",
+    "rlane-libgoogle>=1.0.4",
 ]
 
 [project.urls]
@@ -43,6 +43,9 @@ dev = [
     "pytest>=8.3.4",
     "types-requests>=2.32.0.20241016",
 ]
+
+[tool.coverage.run]
+omit = ["gmail/__main__.py"]
 
 [tool.black]
 line-length = "97"
