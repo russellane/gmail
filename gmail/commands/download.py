@@ -18,11 +18,9 @@ class MailDownloadCmd(GoogleMailCmd):
         parser = self.add_subcommand_parser(
             "download",
             help="download mail messages",
-            description=self.cli.dedent(
-                """
+            description=self.cli.dedent("""
     The `%(prog)s` program downloads a mail message.
-                """
-            ),
+                """),
         )
 
         parser.add_argument(

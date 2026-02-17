@@ -14,11 +14,9 @@ class MailLabelsCmd(GoogleMailCmd):
         parser = self.add_subcommand_parser(
             "labels",
             help="list labels",
-            description=self.cli.dedent(
-                """
+            description=self.cli.dedent("""
     The `%(prog)s` program lists labels.
-                """
-            ),
+                """),
         )
 
         parser.add_argument(

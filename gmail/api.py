@@ -118,7 +118,7 @@ class GoogleMailAPI:
 
             mimetype = part.get("mimeType")
 
-            (basename, ext) = os.path.splitext(part["filename"])
+            basename, ext = os.path.splitext(part["filename"])
             filename = os.path.join(self.download_dir, basename + "-" + msg_id + ext)
 
             body: dict[str, str] | None = part.get("body")

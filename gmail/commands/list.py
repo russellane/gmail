@@ -18,11 +18,9 @@ class MailListCmd(GoogleMailCmd):
         parser = self.add_subcommand_parser(
             "list",
             help="list mail messages",
-            description=self.cli.dedent(
-                """
+            description=self.cli.dedent("""
     The `%(prog)s` program lists mail messages.
-                """
-            ),
+                """),
         )
 
         group = parser.add_argument_group(
