@@ -36,7 +36,6 @@ class MailDownloadCmd(GoogleMailCmd):
         unknown_mimetypes: dict[str, int] = defaultdict(int)
 
         for mimetype, filename, attachment_id in self.cli.api.get_next_attachment_id(msg_id):
-
             logger.error(
                 f"mimetype={mimetype!r} filename={filename!r} attachment_id={attachment_id!r}"
             )
@@ -57,6 +56,5 @@ class MailDownloadCmd(GoogleMailCmd):
             with open(filename, "wb") as _:
                 _.write(self.cli.api.get_attachment_data(msg_id, attachment_id))
 
-        #
         for mimetype, count in unknown_mimetypes.items():
             print(str.format("unknown mimeType {:5d} {:s}", count, mimetype))

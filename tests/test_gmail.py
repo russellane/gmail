@@ -66,7 +66,6 @@ def test_list_print_message_limit_1() -> None:
 
 
 def test_list_print_message_msg_id(mail: GoogleMailAPI) -> None:
-
     for i, msg_id in enumerate(mail.get_next_msg_id()):
         run_cli(["list", "--print-message", "--msg-id", msg_id])
         if i >= 2:

@@ -42,9 +42,7 @@ class GoogleMailAPI:
         parms = {"userId": self.user_id}
 
         logger.debug("service.users().labels().list({!r})", parms)
-        response: dict[str, list[Any]] = (
-            self.service.users().labels().list(**parms).execute()  # noqa: PLE101
-        )  # noqa: PLE101
+        response: dict[str, list[Any]] = self.service.users().labels().list(**parms).execute()
         logger.trace("response {!r}", response)
 
         assert isinstance(response, dict)
@@ -72,7 +70,7 @@ class GoogleMailAPI:
 
         while True:
             logger.debug("service.users().messages().list({!r})", parms)
-            response = self.service.users().messages().list(**parms).execute()  # noqa: PLE101
+            response = self.service.users().messages().list(**parms).execute()
             logger.trace("response {!r}", response)
 
             for _ in response.get("messages", []):
@@ -93,14 +91,14 @@ class GoogleMailAPI:
         }
 
         logger.debug("service.users().messages().get({!r})", parms)
-        response = self.service.users().messages().get(**parms).execute()  # noqa: PLE101
+        response = self.service.users().messages().get(**parms).execute()
         logger.trace("response {!r}", response)
 
         assert isinstance(response, dict)
         return response
 
     def get_next_attachment_id(self, msg_id: str) -> Iterator[tuple[str, str, str]]:
-        """docstring."""
+        """Docstring."""
 
         msg = self.get_message(msg_id)
 
@@ -115,7 +113,6 @@ class GoogleMailAPI:
             return  # pragma: no cover
 
         for part in self._flatten_nested_email_parts(parts):
-
             mimetype = part.get("mimeType")
 
             basename, ext = os.path.splitext(part["filename"])
@@ -147,10 +144,10 @@ class GoogleMailAPI:
             yield mimetype, filename, attachment_id
 
     def get_attachment_data(self, msg_id: str, attachment_id: str) -> bytes:
-        """docstring."""
+        """Docstring."""
 
         att = (
-            self.service.users()  # noqa: PLE101
+            self.service.users()
             .messages()
             .attachments()
             .get(userId=self.user_id, id=attachment_id, messageId=msg_id)

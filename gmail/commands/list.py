@@ -139,7 +139,7 @@ class MailListCmd(GoogleMailCmd):
             self.print_message(msg)
 
     def print_message(self, msg: dict[str, Any]) -> None:
-        """docstring."""
+        """Docstring."""
 
         # logger.debug("msg {!r}", msg)
 
@@ -152,13 +152,11 @@ class MailListCmd(GoogleMailCmd):
             strftime("%Y-%m-%d %H:%M:%S %Z", localtime(int(msg["internalDate"]) / 1000)),
         )
 
-        #
         payload = msg["payload"]
 
         for key, value in payload.items():
             self._print_item("PAYLOAD", key, value)
 
-        #
         headers = payload["headers"]
         for hdr_dict in headers:
             key = hdr_dict["name"]
@@ -178,7 +176,7 @@ class MailListCmd(GoogleMailCmd):
         self._print_item("HEADER", "FROM", msg_from)
 
     def print_listing(self, msg: dict[str, Any]) -> None:
-        """docstring."""
+        """Docstring."""
 
         # logger.info('msg {!r}', msg.keys())
 
@@ -208,6 +206,6 @@ class MailListCmd(GoogleMailCmd):
 
     @staticmethod
     def _print_item(tag: str, key: str, value: str) -> None:
-        """docstring."""
+        """Docstring."""
         truncated = str(value)[:90] + (str(value)[90:] and "...")
         print(str.format("{!r:<7} {!r:<20} {!r}", tag, key, truncated))

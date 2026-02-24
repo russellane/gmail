@@ -37,7 +37,6 @@ class MailLabelsCmd(GoogleMailCmd):
         print("There are", nlabels, "labels")
 
         for idx, label in enumerate(labels):
-
             if self.check_limit():
                 break
 
